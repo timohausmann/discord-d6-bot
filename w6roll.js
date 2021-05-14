@@ -1,7 +1,7 @@
 /**
  * @var {RegExp} rgx allows multiple formats (see help)
  */
-const rgx = new RegExp(/^\/(\d+)?[wWdD](\d+)\s?(\d+)?/);
+const rgx = new RegExp(/^\/(\d+)?[wWdD](\d+)\s?(\d+)?\s?(sum)?/);
 
 /**
  * Array of gif urls to celebrate three or more sixes
@@ -21,21 +21,21 @@ module.exports = function w6roll(msg) {
     const parsed = msg.content.match(rgx);
     if(parsed === null) return null;
 
-    const { w, num } = resolveRegex(parsed);
+    const { w, num, sum } = resolveRegex(parsed);
     
     //limit number of dices
     if(num > 512) {
-        console.log('Bot tried to roll more than 512 dices.')
+        console.log(new Date().toISOString(), 'Bot tried to roll more than 512 dices.')
         return msg.reply('I cannot roll more than 512 dices at once.');
     }
 
     const dices = new Array(num).fill(0).map(() => Math.ceil(Math.random()*w)).sort((a, b) => a - b);
-    const replyStr = formatDices(dices);
-    console.log('Bot rolled', replyStr);
+    const replyStr = formatDices(dices, sum);
+    console.log(new Date().toISOString(), 'Bot rolled', replyStr);
 
     return msg.reply(replyStr)
         .then((w === 6) ? reactCoriolis : () => {})
-        .catch(e => console.log('Roll Message Error', e));
+        .catch(e => console.log(new Date().toISOString(), 'Roll Message Error', e));
 
     /**
      * reactCoriolis
@@ -58,12 +58,15 @@ module.exports = function w6roll(msg) {
     /**
      * formatDices
      * @param {number[]} dices 
+     * @param {boolean} sum 
      * @returns {string}
      */
-    function formatDices(dices) {
+    function formatDices(dices, sum) {
         let str = '`' + parsed[0].trim() + '` ⇒ ';
         str += dices.map(num => num === w ? `**${num}**` : num).join(' ');
-        str += ` *– sum ${dices.reduce((prev, curr) => prev+curr, 0)}*`;
+        
+        //optionally sum up
+        if(sum) str += ` *– sum ${dices.reduce((prev, curr) => prev+curr, 0)}*`;
 
         //don't execeed 2000 character limit
         const truncMsg = '`… message too long, truncating.`';
@@ -78,11 +81,12 @@ module.exports = function w6roll(msg) {
 /**
  * resolveRegex
  * @param {string[]} parsed rgx result
- * @returns {object} {num, w}
+ * @returns {object} {num, sum, w}
  */
 function resolveRegex(parsed) {
 
     let num = 1;
+    let sum = parsed[4] ? true : false;
     let w = parseInt(parsed[2]);
 
     if(parsed[1] !== undefined) {
@@ -91,5 +95,5 @@ function resolveRegex(parsed) {
         num = parseInt(parsed[3]); //"w6 8"
     }
 
-    return { num, w };
+    return { num, sum, w };
 }
