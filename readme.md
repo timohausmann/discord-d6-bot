@@ -23,6 +23,18 @@ The bot response will look like this:
 
 > `/8d6 ⇒ 1 2 4 4 4 4 5 6`
 
+Critical D66 roll command:
+
+* `/d6crit`
+
+Response:
+
+> ```
+> /d6crit ⇒ 36 – Punctured Lung
+> Stunned for one turn, then -3 to DEXTERITY.
+> Fatal: Yes, Healtime: 2D6, Time Limit: D6 days
+> ```
+
 ## Coriolis Features
 
 This bot was primarily created for the role-playing game [Coriolis](https://www.coriolis-rpg.com/).
@@ -44,4 +56,5 @@ If you find a bug or have ideas for improvement, please open an issue or create 
 
 ## Changelog
 
+* `1.1.0` new command: `/d6crit`
 * `1.0.1` optional sum parameter

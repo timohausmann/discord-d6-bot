@@ -268,7 +268,7 @@ module.exports = function w6crit(msg) {
     console.log(new Date().toISOString(), 'Bot critted', d66);
 
     return msg.reply([
-        '`/d6crit` ⇒ ' + `${d66} - ${crit.injury}`,
+        '`/d6crit` ⇒ ' + `${d66} – **${crit.injury}**`,
         `*${crit.effect}*`,
         `*Fatal: ${crit.fatal}, Healtime: ${crit.healtime}, Time Limit: ${crit.timelimit}*`,
     ].join('\n'));
