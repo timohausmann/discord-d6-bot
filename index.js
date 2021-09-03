@@ -1,4 +1,7 @@
-require('dotenv').config();
+require('dotenv').config({
+    path: __dirname + '/.env'
+});
+
 const Discord = require('discord.js');
 const w6help = require('./w6help.js');
 const w6roll = require('./w6roll.js');
